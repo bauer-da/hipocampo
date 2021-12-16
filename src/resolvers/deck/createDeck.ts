@@ -233,6 +233,31 @@ const updateEntitiesIds = (
       const newId = updateFieldIndex[oldId]
       newEntityMap[i] = { ...entityObject, data: { id: newId } }
     }
+    if (entityObject.type == 'TEXT_TO_SPEECH') {
+      const oldId = entityObject.data.fieldId
+      const newId = updateFieldIndex[oldId]
+      newEntityMap[i] = {
+        ...entityObject,
+        data: {
+          ...entityObject.data,
+          fieldId: newId,
+        },
+      }
+    }
+    if (entityObject.type == 'TEXT_INPUT') {
+      const oldId = entityObject.data.fieldId
+      console.log(`oldId: ${oldId}`)
+      const newId = updateFieldIndex[oldId]
+      console.log(updateFieldIndex)
+      console.log(`oldId: ${newId}`)
+      newEntityMap[i] = {
+        ...entityObject,
+        data: {
+          ...entityObject.data,
+          fieldId: newId,
+        },
+      }
+    }
   }
 
   return {

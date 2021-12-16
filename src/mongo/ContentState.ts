@@ -10,6 +10,16 @@ export type EntityMapValue =
       mutability: DraftEntityMutability
       data: { id: string }
     }
+  | {
+      type: 'TEXT_INPUT'
+      mutability: DraftEntityMutability
+      data: { fieldId: string; fieldName: String }
+    }
+  | {
+      type: 'TEXT_TO_SPEECH'
+      mutability: DraftEntityMutability
+      data: { fieldId: string; fieldName: String; languageId: String }
+    }
   | { type: 'LINK'; mutability: DraftEntityMutability; data: { url: string } }
 
 interface Block {

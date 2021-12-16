@@ -92,6 +92,7 @@ export interface Deck {
   description?: string
   slug: string
   published: boolean
+  isDeckInstalled: boolean
   configuration: DeckConfiguration
   ownerId: Types.ObjectId
   createdAt: Date
@@ -166,6 +167,7 @@ const DeckSchema = createSchema<DeckDocument>(
       ref: 'Deck',
     },
     published: { type: Boolean, default: false },
+    isDeckInstalled: { type: Boolean, default: false },
     createdAt: {
       type: Schema.Types.Date,
     },

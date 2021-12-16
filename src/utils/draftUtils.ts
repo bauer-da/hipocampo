@@ -35,19 +35,7 @@ export const draftContent = (
           return total + str + rawKeyEntity
         }
 
-        const draftEntity = {
-          type: rawKeyEntity.type as EntityMapValue['type'],
-          mutability: 'IMMUTABLE',
-          data:
-            rawKeyEntity.type === 'TAG'
-              ? {
-                  ...rawKeyEntity.data,
-                  id: modelFields.find(
-                    (field) => field.name === rawKeyEntity.data.fieldName
-                  )!._id as string,
-                }
-              : (rawKeyEntity.data as EntityMapValue['data']),
-        } as EntityMapValue
+        const draftEntity = getDraftEntityDataByType(rawKeyEntity, modelFields)
 
         const entityKey = entitiesCreated++
 
@@ -112,4 +100,37 @@ export const mention = (fieldName: string): DraftRichObject => {
       fieldName,
     },
   }
+}
+
+const getDraftEntityDataByType = (
+  rawKeyEntity: DraftRichObject,
+  modelFields: FieldDocument[]
+): EntityMapValue => {
+  let data
+  if (rawKeyEntity.type === 'TAG') {
+    data = {
+      ...rawKeyEntity.data,
+      id: modelFields.find(
+        (field) => field.name === rawKeyEntity.data.fieldName
+      )!._id as string,
+    }
+  } else if (
+    rawKeyEntity.type === 'TEXT_INPUT' ||
+    rawKeyEntity.type === 'TEXT_TO_SPEECH'
+  ) {
+    data = {
+      ...rawKeyEntity.data,
+      fieldId: modelFields.find(
+        (field) => field.name === rawKeyEntity.data.fieldName
+      )!._id as string,
+    }
+  } else {
+    data = rawKeyEntity.data as EntityMapValue['data']
+  }
+
+  return {
+    type: rawKeyEntity.type as EntityMapValue['type'],
+    mutability: 'IMMUTABLE',
+    data,
+  } as EntityMapValue
 }

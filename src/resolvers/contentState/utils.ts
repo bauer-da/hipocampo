@@ -23,6 +23,32 @@ export const parseContentStateWithGlobalId = (
               },
             ]
           }
+          if (value.type === 'TEXT_INPUT') {
+            const data = value.data
+            return [
+              key,
+              {
+                ...value,
+                data: {
+                  ...data,
+                  fieldId: fromGlobalId(data.fieldId).id,
+                },
+              },
+            ]
+          }
+          if (value.type === 'TEXT_TO_SPEECH') {
+            const data = value.data
+            return [
+              key,
+              {
+                ...value,
+                data: {
+                  ...data,
+                  fieldId: fromGlobalId(data.fieldId).id,
+                },
+              },
+            ]
+          }
 
           return [key, value]
         })
@@ -50,6 +76,32 @@ export const encodeEntityMapWithGlobalId = (
             },
           ]
         }
+        if (value.type === 'TEXT_INPUT') {
+          const data = value.data
+          return [
+            key,
+            {
+              ...value,
+              data: {
+                ...data,
+                fieldId: toGlobalId('Field', data.fieldId),
+              },
+            },
+          ]
+        }
+        if (value.type === 'TEXT_TO_SPEECH') {
+          const data = value.data
+          return [
+            key,
+            {
+              ...value,
+              data: {
+                ...data,
+                fieldId: toGlobalId('Field', data.fieldId),
+              },
+            },
+          ]
+        }
 
         return [key, value]
       })
@@ -57,7 +109,12 @@ export const encodeEntityMapWithGlobalId = (
   }
 }
 
-const SUPPORTED_TYPES: EntityMapValue['type'][] = ['TAG', 'LINK']
+const SUPPORTED_TYPES: EntityMapValue['type'][] = [
+  'TAG',
+  'TEXT_TO_SPEECH',
+  'TEXT_INPUT',
+  'LINK',
+]
 
 export const validateContentStateInput = (
   contentStateInput: ContentStateInput
@@ -102,6 +159,22 @@ export const validateContentStateInput = (
     switch (type) {
       case 'TAG': {
         const id = (data as any).id
+
+        if (typeof id !== 'string') {
+          return false
+        }
+        break
+      }
+      case 'TEXT_INPUT': {
+        const id = (data as any).fieldId
+
+        if (typeof id !== 'string') {
+          return false
+        }
+        break
+      }
+      case 'TEXT_TO_SPEECH': {
+        const id = (data as any).fieldId
 
         if (typeof id !== 'string') {
           return false
