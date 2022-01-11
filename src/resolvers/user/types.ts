@@ -53,7 +53,7 @@ export const UserType = new GraphQLObjectType<UserDocument>({
       type: GraphQLString,
       description: "User's email",
       resolve: (root, _, { user }) => {
-        if (root._id !== user?._id) {
+        if (String(root._id) !== String(user?._id)) {
           return null
         }
 
